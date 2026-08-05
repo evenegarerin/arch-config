@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ "$EUID" -eq 0 ]; then
+  echo "Please run this script as a normal user, not with sudo."
+  echo "The script will ask for sudo when needed."
+  exit 1
+fi
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
