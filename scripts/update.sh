@@ -20,6 +20,9 @@ read_list() {
 ###############################################################################
 # pacman (official repos)
 ###############################################################################
+
+sudo pacman -Syu
+
 install_pacman() {
   echo "==> pacman packages"
   local want missing=()
