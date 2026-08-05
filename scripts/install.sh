@@ -211,7 +211,10 @@ pacstrap -K /mnt \
     zsh-syntax-highlighting \
     git \
     networkmanager \
-    pkgfile
+    pkgfile \
+    vi \
+    nano \
+    less
 
 # Setting hostname.
 echo "$hostname" > /mnt/etc/hostname
