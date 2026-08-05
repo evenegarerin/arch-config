@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Keybind Cheat Sheet</title>
+
+	<style>
+		:root {
+			--bg: #0f1115;
+			--panel: #151922;
+			--text: #e6e6e6;
+			--muted: #a0a0a0;
+			--border: rgba(255, 255, 255, 0.06);
+			--accent: #7aa2f7;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			overflow: hidden;
+			/* IMPORTANT: no vertical scroll */
+			background: var(--bg);
+			color: var(--text);
+			font-family: system-ui, sans-serif;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			padding: 24px;
+			gap: 16px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 20px;
+			font-weight: 600;
+		}
+
+		/* horizontal scroll container */
+		#container {
+			flex: 1;
+			display: flex;
+			flex-direction: row;
+			gap: 16px;
+			overflow-x: auto;
+			overflow-y: hidden;
+			padding-bottom: 8px;
+		}
+
+		/* each category is a fixed-height column */
+		.category {
+			min-width: 320px;
+			max-width: 320px;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+
+			background: var(--panel);
+			border: 1px solid var(--border);
+			padding: 12px;
+		}
+
+		.category-title {
+			font-size: 16px;
+			font-weight: 600;
+			color: var(--accent);
+			margin-bottom: 10px;
+		}
+
+		.subcategories {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+
+			overflow: hidden;
+		}
+
+		.subcategory {
+			border: 1px solid var(--border);
+			padding: 8px;
+			background: rgba(255, 255, 255, 0.02);
+		}
+
+		.subcategory-title {
+			font-size: 13px;
+			color: var(--muted);
+			margin-bottom: 6px;
+		}
+
+		.keybind {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 2px 0;
+			font-size: 13px;
+		}
+
+		.key-left {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			flex-wrap: wrap;
+		}
+
+		kbd {
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid var(--border);
+			padding: 2px 6px;
+			font-size: 12px;
+			border-radius: 5px;
+			color: var(--text);
+		}
+
+		.plus {
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.action {
+			color: var(--muted);
+			font-size: 12px;
+			text-align: right;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>Taylor's Keybind Cheat Sheet</h1>
+
+	<div id="container"></div>
+
+	<script>
+		const keybinds = {
+			neovim: {
+				normal: {
+					"dd": "delete line",
+					"yy": "copy line",
+					"p": "paste"
+				},
+				insert: {
+					"jk": "leave insert mode"
+				}
+			},
+
+			hyprland: {
+				"\u00A0": {
+					"SUPER Enter": "open terminal",
+					"SUPER Q": "close focused window",
+					"SUPER D": "app launcher",
+					"SUPER J": "workspace left",
+					"SUPER K": "workspace right",
+					"SUPER F": "fullscreen focused window",
+					"SUPER L": "lock pc",
+					"SUPER B": "open browser",
+					"SUPER C": "open vscode",
+					"SUPER V": "open neovim",
+					"SUPER N": "swap window order in workspace",
+					"F1": "play/pause media player",
+				}
+			},
+
+			firefox: {
+				"vimmatic": {}
+			},
+
+			yazi: {
+				"\u00A0": {}
+			},
+
+			vscode: {
+				"\u00A0": {}
+			}
+		};
+
+		const container = document.getElementById("container");
+
+		/* deterministic layout only */
+		function createKeyRow(key, action) {
+			const row = document.createElement("div");
+			row.className = "keybind";
+
+			const left = document.createElement("div");
+			left.className = "key-left";
+
+			const parts = key.split(" ");
+
+			for (let i = 0; i < parts.length; i++) {
+				const kbd = document.createElement("kbd");
+				kbd.textContent = parts[i];
+				left.appendChild(kbd);
+
+				if (i < parts.length - 1) {
+					const plus = document.createElement("span");
+					plus.className = "plus";
+					plus.textContent = "+";
+					left.appendChild(plus);
+				}
+			}
+
+			const actionEl = document.createElement("div");
+			actionEl.className = "action";
+			actionEl.textContent = action;
+
+			row.appendChild(left);
+			row.appendChild(actionEl);
+
+			return row;
+		}
+
+		function generate(data) {
+			for (const categoryName in data) {
+				const category = document.createElement("div");
+				category.className = "category";
+
+				const title = document.createElement("div");
+				title.className = "category-title";
+				title.textContent = categoryName;
+
+				category.appendChild(title);
+
+				const wrap = document.createElement("div");
+				wrap.className = "subcategories";
+
+				for (const sub in data[categoryName]) {
+					const box = document.createElement("div");
+					box.className = "subcategory";
+
+					const subTitle = document.createElement("div");
+					subTitle.className = "subcategory-title";
+					subTitle.textContent = sub;
+
+					box.appendChild(subTitle);
+
+					for (const key in data[categoryName][sub]) {
+						box.appendChild(
+							createKeyRow(key, data[categoryName][sub][key])
+						);
+					}
+
+					wrap.appendChild(box);
+				}
+
+				category.appendChild(wrap);
+				container.appendChild(category);
+			}
+		}
+
+		generate(keybinds);
+	</script>
+
+</body>
+
+</html>

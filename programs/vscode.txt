@@ -1,0 +1,18 @@
+# VSCodium extensions
+# Installed with: codium --install-extension <id>
+# NOTE: VSCodium uses the open-vsx registry by default. Some Microsoft
+#       extensions (e.g. ms-python.vscode-pylance) are NOT published there
+#       and will fail to install - left commented out below.
+
+bbenoist.nix
+brettm12345.nixfmt-vscode
+streetsidesoftware.code-spell-checker
+streetsidesoftware.code-spell-checker-german
+ms-python.python
+ms-vscode.live-server
+charliermarsh.ruff
+elmtooling.elm-ls-vscode
+hbenl.vscode-test-explorer
+albert.TabOut
+
+# ms-python.vscode-pylance   # not available on open-vsx

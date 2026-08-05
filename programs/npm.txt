@@ -1,0 +1,6 @@
+# Global npm packages
+# Installed with: sudo npm install -g <pkg>
+# These are distributed via npm rather than the arch repos / AUR.
+
+elm-land                      # nix: elm-land
+elm-review                    # nix: elmPackages.elm-review

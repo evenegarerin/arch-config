@@ -1,0 +1,5 @@
+# Yazi configuration
+# translated from nixos-config/home/yazi.nix
+
+[mgr]
+show_hidden = true

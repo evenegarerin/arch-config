@@ -1,0 +1,4 @@
+# Wofi configuration
+# translated from nixos-config/home/wofi.nix
+drun-print_command=true
+allow_images=true

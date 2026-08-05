@@ -1,0 +1,34 @@
+# AUR packages (built/installed via an AUR helper, e.g. yay)
+# Installed with: yay -S --needed <pkg>
+# NOTE: AUR package names are best-effort translations of the nix packages.
+#       Verify/adjust names if a build fails (e.g. -bin vs source variants).
+
+# --- Editor ---
+vscodium-bin           # nix: vscodium
+
+# --- GUI applications ---
+localsend-bin          # nix: localsend
+postman-bin            # nix: postman
+appflowy-bin           # nix: appflowy
+devtoolbox             # nix: devtoolbox (may also be a flatpak: me.iepure.devtoolbox)
+keypunch-git               # nix: keypunch (may also be a flatpak)
+resonance-bin              # nix: resonance (music player)
+lowfi-bin
+mp3gain
+
+# --- Theme / cursor / fonts ---
+# xcursor-borealis
+# andromeda-gtk-theme # no
+ttf-plus-jakarta-sans  # nix: plus-jakarta-sans
+
+# --- Dev / language servers ---
+nixd                   # for editing the nixos-config reference
+nixpkgs-fmt
+python-lsp-ruff
+elm-bin
+elm-format-bin
+elm-language-server
+
+# --- Data tooling ---
+datasette
+sqlite-utils
