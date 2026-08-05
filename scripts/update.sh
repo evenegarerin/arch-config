@@ -8,12 +8,12 @@ fi
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(sudo cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 
 # installing programs as specified by the programs directory
 
-PROGRAMS_DIR="$(cd "$SCRIPT_DIR/../programs" && pwd)"
+PROGRAMS_DIR="$(sudo cd "$SCRIPT_DIR/../programs" && pwd)"
 
 # Read a program list file: strip comments (incl. trailing "# ..."), trim, drop blanks.
 read_list() {
@@ -137,7 +137,7 @@ install_vscode
 
 # # configure programs based on ../config
 
-# CONFIG_DIR="$(cd "$SCRIPT_DIR/../config" && pwd)"
+# CONFIG_DIR="$(sudo cd "$SCRIPT_DIR/../config" && pwd)"
 
 # links=(
 #   "hypr|$HOME/.config/hypr"
