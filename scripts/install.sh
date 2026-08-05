@@ -333,9 +333,11 @@ user_creator admin true
 info_print "Configuring pacman."
 
 sed -Ei \
-    's/^#(Color)$/\1\nILoveCandy/;s/^#(ParallelDownloads).*/\1 = 10/' \
-    /mnt/etc/pacman.conf
-
+    -e 's/^#(Color)$/\1\nILoveCandy/' \
+    -e 's/^#(ParallelDownloads).*/\1 = 10/' \
+    -e 's/^#(\[multilib\])$/\1/' \
+    -e 's/^#(Include = \/etc\/pacman\.d\/mirrorlist)$/\1/' \
+    /etc/pacman.conf
 
 # Enable services.
 info_print "Enabling services."
