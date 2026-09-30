@@ -2,31 +2,9 @@
 
 # this is an arch install script, based of my original nixos setup
 
-# Cleaning the TTY.
-clear
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-# Cosmetics (colours for text).
-BOLD='\e[1m'
-BRED='\e[91m'
-BBLUE='\e[34m'  
-BGREEN='\e[92m'
-BYELLOW='\e[93m'
-RESET='\e[0m'
-
-# Pretty print (function).
-info_print () {
-    echo -e "${BOLD}${BGREEN}[ ${BYELLOW}•${BGREEN} ] $1${RESET}"
-}
-
-# Pretty print for input (function).
-input_print () {
-    echo -ne "${BOLD}${BYELLOW}[ ${BGREEN}•${BYELLOW} ] $1${RESET}"
-}
-
-# Alert user of bad input (function).
-error_print () {
-    echo -e "${BOLD}${BRED}[ ${BBLUE}•${BRED} ] $1${RESET}"
-}
+source "$SCRIPT_DIR/common.sh"
 
 # User chooses the console keyboard layout (function).
 keyboard_selector () {
@@ -78,6 +56,11 @@ user_password_selector () {
         return 1
     fi
     return 0
+}
+
+password_less_sudo_selector () {
+    input_print "Would you like password less sudo for all wheel users? y/N"
+    read -r -s password_less_sudo
 }
 
 # User creator (function).
@@ -134,12 +117,19 @@ until keyboard_selector; do : ; done
 info_print "Available disks for the installation:"
 mapfile -t ARR < <(lsblk -dpno NAME,SIZE,MODEL | grep -P "/dev/sd|nvme|vd");
 PS3="Please select the number of the corresponding disk (e.g. 1): "
-select ENTRY in "${ARR[@]}";
-do
-    DISK=$(echo "$ENTRY" | awk '{print $1}')
-    info_print "Arch Linux will be installed on the following disk: $DISK"
-    break
+while true; do
+    select ENTRY in "${ARR[@]}"; do
+        if [[ -n "$ENTRY" ]]; then
+            DISK="${ENTRY%% *}"
+            break 2
+        fi
+
+        error_print "Invalid selection."
+        break
+    done
 done
+
+info_print "Arch Linux will be installed on the following disk: $DISK"
 
 # User choses the hostname.
 until hostname_selector; do : ; done
@@ -193,7 +183,7 @@ mkdir -p /mnt/{home,root,srv}
 chmod 750 /mnt/root
 
 # Installing base system.
-info_print "Installing the base system."
+info_print "Installing the base system and some utility"
 pacstrap -K /mnt \
     base \
     base-devel \
@@ -203,6 +193,7 @@ pacstrap -K /mnt \
     linux-lts-headers \
     grub \
     rsync \
+    greetd \
     efibootmgr \
     reflector \
     zram-generator \
@@ -211,10 +202,7 @@ pacstrap -K /mnt \
     zsh-syntax-highlighting \
     git \
     networkmanager \
-    pkgfile \
-    vi \
-    nano \
-    less
+    pkgfile
 
 # Setting hostname.
 echo "$hostname" > /mnt/etc/hostname
@@ -274,7 +262,7 @@ EOF
 # Configure system inside chroot.
 info_print "Configuring installed system."
 
-arch-chroot /mnt /bin/bash -e <<EOF
+arch-chroot /mnt /bin/bash -e <<'EOF'
     # Timezone.
     ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
@@ -309,7 +297,14 @@ EOF
 # managing user rights
 arch-chroot /mnt passwd -l root
 
-echo "%wheel ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/wheel
+until password_less_sudo_selector; do : ; done
+
+if [[ "$password_less_sudo" == "y" ]]; then
+    echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
+else
+    echo "%wheel ALL=(ALL:ALL) ALL" > /mnt/etc/sudoers.d/wheel
+fi
+
 chmod 440 /mnt/etc/sudoers.d/wheel
 
 # creating users
@@ -329,18 +324,18 @@ source "$ZSH/oh-my-zsh.sh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 EOF
 
-user_creator castle false
-user_creator admin true
+for user in "${USERS[@]}"; do
+    read -r username sudo <<< "$user"
+    user_creator "$username" "$sudo"
+done
 
 # Pacman improvements.
 info_print "Configuring pacman."
 
 sed -Ei \
-    -e 's/^#(Color)$/\1\nILoveCandy/' \
-    -e 's/^#(ParallelDownloads).*/\1 = 10/' \
-    -e 's/^#(\[multilib\])$/\1/' \
-    -e 's/^#(Include = \/etc\/pacman\.d\/mirrorlist)$/\1/' \
-    /etc/pacman.conf
+    's/^#(Color)$/\1\nILoveCandy/;s/^#(ParallelDownloads).*/\1 = 10/' \
+    /mnt/etc/pacman.conf
+
 
 # Enable services.
 info_print "Enabling services."
@@ -354,6 +349,15 @@ services=(
 for service in "${services[@]}"; do
     systemctl enable "$service" --root=/mnt
 done
+
+read -r username _ <<< "${USERS[0]}"
+
+mkdir -p "/mnt/home/$username/arch-config"
+cp -a "$SCRIPT_DIR/../." "/mnt/home/$username/arch-config/"
+
+find /mnt/home/$username/arch-config -mindepth 2 -maxdepth 2 -type f -name '*.sh' -exec chmod +x {} +
+
+# arch-chroot /mnt /home/$username/arch-config/scripts/full.sh
 
 umount -R /mnt
 
