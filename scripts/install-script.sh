@@ -60,7 +60,7 @@ user_password_selector () {
 
 password_less_sudo_selector () {
     input_print "Would you like password less sudo for all wheel users? y/N"
-    read -r -s password_less_sudo
+    read -r password_less_sudo
 }
 
 # User creator (function).
@@ -297,8 +297,6 @@ EOF
 # managing user rights
 arch-chroot /mnt passwd -l root
 
-until password_less_sudo_selector; do : ; done
-
 if [[ "$password_less_sudo" == "y" ]]; then
     echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
 else
@@ -328,6 +326,8 @@ for user in "${USERS[@]}"; do
     read -r username sudo <<< "$user"
     user_creator "$username" "$sudo"
 done
+
+until password_less_sudo_selector; do : ; done
 
 # Pacman improvements.
 info_print "Configuring pacman."

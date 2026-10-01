@@ -89,6 +89,8 @@ PROGRAMS=(
     gedit
     spotify-launcher
     mission-center
+    nano
+    nivm
 
     # Appearance / display helpers
     nwg-displays

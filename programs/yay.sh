@@ -7,35 +7,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
 PROGRAMS=(
-    # --- Editor ---
-    vscodium-bin
-
-    # --- GUI applications ---
-    localsend-bin
-    postman-bin
-    appflowy-bin
-    devtoolbox
-    keypunch-git
-    resonance-bin
-    lowfi-bin
-    mp3gain
-
-    # --- Theme / cursor / fonts ---
-    # xcursor-borealis
-    # andromeda-gtk-theme # no
-    ttf-plus-jakarta-sans  # nix: plus-jakarta-sans
-
-    # --- Dev / language servers ---
-    nixd
-    nixpkgs-fmt
     python-lsp-ruff
-    elm-bin
-    elm-format-bin
-    elm-language-server
-
-    # --- Data tooling ---
-    datasette
-    sqlite-utils
 )
 
 info_print "Installing programs globally via npm"
@@ -57,7 +29,7 @@ if ! command -v yay >/dev/null 2>&1; then
 
     sudo -u "$SUDO_USER" git clone https://aur.archlinux.org/yay.git .
     
-    sudo -u "$SUDO_USER" -H makepkg -si
+    sudo -u "$SUDO_USER" -H makepkg -sic --noconfirm
     
     cd ..
     rm -rf "$temp_dir"
@@ -66,4 +38,4 @@ fi
 # Install all programs in a single transaction
 info_print "Installing programs"
 
-yay -Sq --noconfirm "${PROGRAMS[@]}"
+sudo -u "$SUDO_USER" -H yay -Sq --noconfirm "${PROGRAMS[@]}"

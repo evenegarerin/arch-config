@@ -9,6 +9,7 @@ source "$SCRIPT_DIR/common.sh"
 PROGRAMS=(
     elm-land
     elm-review
+    pnpm
 )
 
 info_print "Installing programs globally via npm"
