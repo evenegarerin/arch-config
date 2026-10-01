@@ -17,9 +17,9 @@ info_print "Installing programs globally via npm"
 if ! command -v npm >/dev/null 2>&1; then
     info_print "Installing npm"
 
-    pacman -Syuq
+    sudo pacman -Syuq --noconfirm
 
-    sudo pacman -Sq --needed npm
+    sudo pacman -Sq --needed --noconfirm npm
 fi
 
 # the actual installing of the programs

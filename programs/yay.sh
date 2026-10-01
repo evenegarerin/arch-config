@@ -44,21 +44,26 @@ info_print "Installing programs globally via npm"
 if ! command -v yay >/dev/null 2>&1; then
     info_print "Installing yay"
 
-    pacman -Syuq
+    pacman -Syuq --noconfirm
 
     if ! command -v git >/dev/null 2>&1; then
-        sudo pacman -Sq --needed git
+        pacman -Sq --needed --noconfirm git
     fi
 
-    git clone https://aur.archlinux.org/yay.git:temp-yay .
-    cd temp-yay
-    makepkg -si
+    temp_dir=$(mktemp -d)
+    chown "$SUDO_USER:$SUDO_USER" "$temp_dir"
+
+    cd "$temp_dir"
+
+    sudo -u "$SUDO_USER" git clone https://aur.archlinux.org/yay.git .
+    
+    sudo -u "$SUDO_USER" -H makepkg -si
+    
     cd ..
-    rm -rf temp-yay
+    rm -rf "$temp_dir"
 fi
 
-# the actual installing of the programs
-for program in "${PROGRAMS[@]}"; do
-    echo "installing $program"
-    yay install -g --silent $program
-done
+# Install all programs in a single transaction
+info_print "Installing programs"
+
+yay -Sq --noconfirm "${PROGRAMS[@]}"

@@ -135,8 +135,7 @@ info_print "Installing programs via pacman"
 # keeping the system up to date
 pacman -Syuq
 
-# the actual installing of the programs
-for program in "${PROGRAMS[@]}"; do
-    echo "installing $program"
-    pacman -Sq --noconfirm $program
-done
+# Install all programs in a single transaction
+info_print "Installing programs"
+
+pacman -Sq --noconfirm "${PROGRAMS[@]}"
