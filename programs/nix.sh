@@ -6,8 +6,10 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$SCRIPT_DIR/common.sh"
 
+NIXPKGS="github:NixOS/nixpkgs/nixos-26.05"
+
 PROGRAMS=(
-    datasette
+    # datasette # broken right now
     sqlite-utils
     localsend
     postman
@@ -39,11 +41,16 @@ if ! command -v nix >/dev/null 2>&1; then
     pacman -Sq --needed --noconfirm nix
 fi
 
+if ! systemctl is-enabled --quiet nix-daemon.service; then
+    systemctl enable --now nix-daemon.service
+fi
+
+
 # Install the programs into the user's Nix profile
 info_print "Installing programs"
 
 for user in "${USERS[@]}"; do
     read -r username sudo <<< "$user"
 
-    runuser -u "$username" -H -- nix --extra-experimental-features 'nix-command flakes' profile add "${PROGRAMS[@]/#/nixpkgs#}"
+    runuser -u "$username" -- env NIXPKGS_ALLOW_UNFREE=1 nix --extra-experimental-features 'nix-command flakes' profile add --impure "${PROGRAMS[@]/#/$NIXPKGS#}"
 done
