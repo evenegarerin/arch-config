@@ -27,3 +27,12 @@ USERS=(
     "castle false"
     "admin true"
 )
+
+for user in "${USERS[@]}"; do
+    read -r username is_sudo <<< "$user"
+
+    if [[ "$is_sudo" == "true" ]]; then
+        sudo_user="$username"
+        break
+    fi
+done

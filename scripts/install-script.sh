@@ -320,6 +320,11 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+function sudo2()
+{
+    su - $sudo_user -c 'sudo -S $@'
+}
 EOF
 
 for user in "${USERS[@]}"; do
@@ -354,6 +359,8 @@ read -r username _ <<< "${USERS[0]}"
 
 mkdir -p "/mnt/home/$username/arch-config"
 cp -a "$SCRIPT_DIR/../." "/mnt/home/$username/arch-config/"
+
+chown -R "$username:" "/mnt/home/$username/arch-config"
 
 find /mnt/home/$username/arch-config -mindepth 2 -maxdepth 2 -type f -name '*.sh' -exec chmod +x {} +
 

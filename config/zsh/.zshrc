@@ -49,3 +49,8 @@ function yy() {
 if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+function sudo2()
+{
+    su - $sudo_user -c 'sudo -S $@'
+}
