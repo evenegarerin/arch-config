@@ -59,7 +59,7 @@ user_password_selector () {
 }
 
 password_less_sudo_selector () {
-    input_print "Would you like password less sudo for all wheel users? y/N"
+    input_print "Would you like password less sudo for all wheel users [y/N]?: "
     read -r password_less_sudo
 }
 
@@ -323,7 +323,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 function sudo2()
 {
-    su - $sudo_user -c 'sudo -S $@'
+    su - $sudo_user -c "sudo $*"
 }
 EOF
 
@@ -360,7 +360,7 @@ read -r username _ <<< "${USERS[0]}"
 mkdir -p "/mnt/home/$username/arch-config"
 cp -a "$SCRIPT_DIR/../." "/mnt/home/$username/arch-config/"
 
-chown -R "$username:" "/mnt/home/$username/arch-config"
+arch-chroot /mnt chown -R "$username:$username" "/home/$username/arch-config"
 
 find /mnt/home/$username/arch-config -mindepth 2 -maxdepth 2 -type f -name '*.sh' -exec chmod +x {} +
 

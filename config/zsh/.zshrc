@@ -52,5 +52,5 @@ fi
 
 function sudo2()
 {
-    su - $sudo_user -c 'sudo -S $@'
+    su - $sudo_user -c "sudo $*"
 }

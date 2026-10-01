@@ -42,4 +42,8 @@ fi
 # Install the programs into the user's Nix profile
 info_print "Installing programs"
 
-nix profile install "${PROGRAMS[@]/#/nixpkgs#}"
+for user in "${USERS[@]}"; do
+    read -r username sudo <<< "$user"
+
+    runuser -u "$username" -H -- nix --extra-experimental-features 'nix-command flakes' profile add "${PROGRAMS[@]/#/nixpkgs#}"
+done
