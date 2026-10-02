@@ -325,7 +325,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 function sudo2()
 {
-    su $sudo_user -c "sudo $*"
+    runuser $sudo_user -c "sudo $*"
 }
 EOF
 
