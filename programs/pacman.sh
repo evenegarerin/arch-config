@@ -37,7 +37,7 @@ PROGRAMS=(
     pipewire-pulse
     pipewire-jack
     wireplumber
-    lib32-pipewire        # multilib (alsa.support32Bit) - needs multilib enabled
+    # lib32-pipewire        # multilib (alsa.support32Bit) - needs multilib enabled,        do i need this? if so i need to setup to install from multilib repository
     libpulse              # provides pactl, used by the hyprland volume binds
     rtkit
 
@@ -90,7 +90,8 @@ PROGRAMS=(
     spotify-launcher
     mission-center
     nano
-    nivm
+    neovim
+    less
 
     # Appearance / display helpers
     nwg-displays
@@ -101,7 +102,6 @@ PROGRAMS=(
     # Development
     nodejs
     npm
-    pnpm
     python
     python-numpy
     python-dbus
@@ -130,6 +130,10 @@ PROGRAMS=(
     glib2
     udisks2
     gvfs
+
+    # man pages
+    man-db
+    man-pages
 )
 
 info_print "Installing programs via pacman"

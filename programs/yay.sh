@@ -29,7 +29,7 @@ if ! command -v yay >/dev/null 2>&1; then
 
     runuser -u "$SUDO_USER" -- git clone https://aur.archlinux.org/yay.git .
     
-    runuser -u "$SUDO_USER" -H -- makepkg -sic --noconfirm
+    runuser -u "$SUDO_USER" -- makepkg -sic --noconfirm
     
     cd ..
     rm -rf "$temp_dir"
@@ -38,4 +38,4 @@ fi
 # Install all programs in a single transaction
 info_print "Installing programs"
 
-runuser -u "$SUDO_USER" -H -- yay -Sq --noconfirm "${PROGRAMS[@]}"
+runuser -u "$SUDO_USER" -- yay -Sq --noconfirm "${PROGRAMS[@]}"

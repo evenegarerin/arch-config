@@ -297,6 +297,8 @@ EOF
 # managing user rights
 arch-chroot /mnt passwd -l root
 
+until password_less_sudo_selector; do : ; done
+
 if [[ "$password_less_sudo" == "y" ]]; then
     echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
 else
@@ -323,7 +325,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 function sudo2()
 {
-    su - $sudo_user -c "sudo $*"
+    su $sudo_user -c "sudo $*"
 }
 EOF
 
@@ -331,8 +333,6 @@ for user in "${USERS[@]}"; do
     read -r username sudo <<< "$user"
     user_creator "$username" "$sudo"
 done
-
-until password_less_sudo_selector; do : ; done
 
 # Pacman improvements.
 info_print "Configuring pacman."
@@ -356,6 +356,8 @@ for service in "${services[@]}"; do
 done
 
 read -r username _ <<< "${USERS[0]}"
+
+chmod 701 "/mnt/home/$username"
 
 mkdir -p "/mnt/home/$username/arch-config"
 cp -a "$SCRIPT_DIR/../." "/mnt/home/$username/arch-config/"

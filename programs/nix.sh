@@ -45,7 +45,6 @@ if ! systemctl is-enabled --quiet nix-daemon.service; then
     systemctl enable --now nix-daemon.service
 fi
 
-
 # Install the programs into the user's Nix profile
 info_print "Installing programs"
 
@@ -54,3 +53,7 @@ for user in "${USERS[@]}"; do
 
     runuser -u "$username" -- env NIXPKGS_ALLOW_UNFREE=1 nix --extra-experimental-features 'nix-command flakes' profile add --impure "${PROGRAMS[@]/#/$NIXPKGS#}"
 done
+
+echo "Nix and its programs have been installed, if this is the first instance in which nix has been installed and the programs dont appear in path run this:"
+echo "source /etc/profile.d/nix-daemon.sh"
+echo "or reboot"

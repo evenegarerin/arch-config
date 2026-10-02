@@ -7,9 +7,11 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
 # calling all scripts
-info_print "Installing programs to the system"
+info_print "Installing programs for the system"
 
 find "$SCRIPT_DIR/../programs" -maxdepth 1 -type f -name '*.sh' -print0 |
 while IFS= read -r -d '' script; do
     "$script"
 done
+
+info_print "Fully installed programs for the system"

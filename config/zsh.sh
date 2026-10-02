@@ -9,9 +9,7 @@ echo "configuring zsh"
 for user in "${USERS[@]}"; do
     read -r username sudo <<< "$user"
 
-    if [[ -L "$config_dir/.zshrc" ]]; then
-        rm "$config_dir/.zshrc"
-    fi
+    user_home="/home/$username"
 
-    ln -sfn "$SCRIPT_DIR/zsh/.zshrc" "$config_dir/.zshrc"
+    ln -sfn "$SCRIPT_DIR/zsh/.zshrc" "$user_home/.zshrc"
 done
