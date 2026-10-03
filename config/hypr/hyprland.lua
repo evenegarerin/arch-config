@@ -51,21 +51,35 @@ hl.window_rule({
     fullscreen_state = "0 0",
 })
 
-local function fullscreen_if_only_window(w, ws)
-    if w == nil or ws == nil then return end
-
-    if #ws.windows == 0 or (#ws.windows == 1 and ws.windows[1] == w) then
-        w:fullscreen()
-    end
-end
-
-hl.on("window", function(w)
+hl.on("window.open", function(w)
     if w == nil then return end
 
     local windows = hl.get_workspace_windows(w.workspace)
 
     if #windows == 0 or (#windows == 1 and windows[1] == w) then
-        w:fullscreen()
+        hl.dispatch(hl.dsp.window.fullscreen_state({
+            window = w,
+            action = "set",
+            internal = 2,
+            client = -1,
+        }))
+    end
+end)
+
+hl.on("window.destroy", function(w)
+    if w == nil then return end
+
+    local windows = hl.get_workspace_windows(w.workspace)
+
+    if #windows == 1 then
+        local remaining = windows[1]
+
+        hl.dispatch(hl.dsp.window.fullscreen_state({
+            window = remaining,
+            action = "set",
+            internal = 2,
+            client = -1,
+        }))
     end
 end)
 
