@@ -66,20 +66,23 @@ hl.on("window.open", function(w)
     end
 end)
 
-hl.on("window.destroy", function(w)
+hl.on("window.close", function(w)
     if w == nil then return end
 
     local windows = hl.get_workspace_windows(w.workspace)
 
-    if #windows == 1 then
-        local remaining = windows[1]
-
-        hl.dispatch(hl.dsp.window.fullscreen_state({
-            window = remaining,
-            action = "set",
-            internal = 2,
-            client = -1,
-        }))
+    if #windows == 2 then
+        for _, window in ipairs(windows) do
+            if window ~= w then
+                hl.dispatch(hl.dsp.window.fullscreen_state({
+                    window = window,
+                    action = "set",
+                    internal = 2,
+                    client = -1,
+                }))
+                break
+            end
+        end
     end
 end)
 
