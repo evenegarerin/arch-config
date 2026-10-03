@@ -1,5 +1,7 @@
 #!/usr/bin/env -S bash -e
 
-chmod +x /mnt/home/$username/arch-config/config/*sh
-chmod +x /mnt/home/$username/arch-config/programs/*sh
-chmod +x /mnt/home/$username/arch-config/scripts/*sh
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+chmod +x $SCRIPT_DIR/../config/*sh
+chmod +x $SCRIPT_DIR/../programs/*sh
+chmod +x $SCRIPT_DIR/../scripts/*sh
