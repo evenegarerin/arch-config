@@ -13,4 +13,10 @@ while IFS= read -r -d '' script; do
     "$script"
 done
 
+for user in "${USERS[@]}"; do
+    read -r username sudo <<< "$user"
+
+    chown -R $username:$username /home/$username/.config
+done
+
 info_print "Fully configured the system"

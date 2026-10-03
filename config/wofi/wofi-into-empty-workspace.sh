@@ -12,5 +12,5 @@ if [[ -n "$selected_app" ]]; then
     hyprctl dispatch 'hl.dsp.focus({ workspace = "emptym" })'
 
     # Launch the app in the current (empty) workspace
-    hyprctl dispatch exec "hl.dsp.exec_cmd('$selected_app')"
+    hyprctl dispatch "hl.dsp.exec_cmd('$selected_app')"
 fi

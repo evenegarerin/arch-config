@@ -11,13 +11,13 @@ NIXPKGS="github:NixOS/nixpkgs/nixos-26.05"
 PROGRAMS=(
     # datasette # broken right now
     sqlite-utils
-    localsend
+    # localsend     # i am having problems with flutter apps installed via nix
+    # appflowy      # same as localsend
     postman
     mp3gain
     lowfi
     resonance
     keypunch
-    appflowy
     devtoolbox
     plus-jakarta-sans
     nixd

@@ -51,6 +51,24 @@ hl.window_rule({
     fullscreen_state = "0 0",
 })
 
+local function fullscreen_if_only_window(w, ws)
+    if w == nil or ws == nil then return end
+
+    if #ws.windows == 0 or (#ws.windows == 1 and ws.windows[1] == w) then
+        w:fullscreen()
+    end
+end
+
+hl.on("window", function(w)
+    if w == nil then return end
+
+    local windows = hl.get_workspace_windows(w.workspace)
+
+    if #windows == 0 or (#windows == 1 and windows[1] == w) then
+        w:fullscreen()
+    end
+end)
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Look & feel
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +117,7 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("kitty"))
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/wofi/wofi-into-empty-workspace.sh"))
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("bash ~/.config/wofi/wofi-into-empty-workspace.sh"))
 hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd("wofi"))
 
 hl.bind(mainMod .. " + Q",

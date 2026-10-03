@@ -8,6 +8,10 @@ source "$SCRIPT_DIR/common.sh"
 
 PROGRAMS=(
     python-lsp-ruff
+    localsend-bin
+    appflowy-bin
+    opencode-bin
+    openchamber-desktop-appimage
 )
 
 info_print "Installing programs globally via npm"
