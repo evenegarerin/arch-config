@@ -104,7 +104,7 @@ hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd("wofi"))
 
 hl.bind(mainMod .. " + Q",
     hl.dsp.exec_cmd(
-        "if [ $(hyprctl activeworkspace -j | jq -r .windows) -le 1 ]; then hyprctl dispatch killactive; hyprctl dispatch workspace previous; else hyprctl dispatch killactive; fi"))
+        "if [ $(hyprctl activeworkspace -j | jq -r .windows) -le 1 ]; then hyprctl dispatch 'hl.dsp.window.close()'; hyprctl dispatch 'hl.dsp.focus({ workspace = \"previous\" })'; else hyprctl dispatch 'hl.dsp.window.close()'; fi"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock --grace 3"))
 hl.bind(mainMod .. " + N",

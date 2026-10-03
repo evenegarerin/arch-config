@@ -134,6 +134,9 @@ PROGRAMS=(
     # man pages
     man-db
     man-pages
+
+    # other, or i am to lazy to find the right category
+    xdg-terminal-exec
 )
 
 info_print "Installing programs via pacman"
