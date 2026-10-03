@@ -52,5 +52,5 @@ fi
 
 function sudo2()
 {
-    su $sudo_user -c "sudo $*"
+    su admin -c "sudo $*" # it would be better to not hard code the name of the wheel user here
 }

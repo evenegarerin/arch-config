@@ -18,16 +18,15 @@ hl.env("HYPRSHOT_DIR", "$HOME/Pictures/Screenshots")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd(hyprpaper)
-    hl.exec_cmd(hypridle)
-    hl.exec_cmd(hyprlock)
-    hl.exec_cmd(kitty)
-    hl.exec_cmd(waybar)
+    hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("hypridle")
+    hl.exec_cmd("hyprlock")
+    hl.exec_cmd("kitty")
+    hl.exec_cmd("waybar")
     hl.exec_cmd("nm-applet")
-    hl.exec_cmd(swaync)
+    hl.exec_cmd("swaync")
     hl.exec_cmd("blueman-applet")
     hl.exec_cmd("wl-clip-persist")
-    hl.exce_cmd(systemctl)
 end)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,8 +57,8 @@ hl.window_rule({
 
 hl.config({
     general = {
-        gaps_in = 5,
-        gaps_out = 20
+        gaps_in = 3,
+        gaps_out = 6
     },
 
     decoration = {
@@ -88,9 +87,9 @@ hl.config({
     }
 })
 
-hl.animation({ leaf = "windows", enabled = true, speed = 6, benzier = "default" })
-hl.animation({ leaf = "fade", enabled = true, speed = 6, benzier = "default" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 6, benzier = "default" })
+hl.animation({ leaf = "windows", enabled = true, speed = 6, bezier = "default" })
+hl.animation({ leaf = "fade", enabled = true, speed = 6, bezier = "default" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default" })
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -107,7 +106,7 @@ hl.bind(mainMod .. " + Q",
     hl.dsp.exec_cmd(
         "if [ $(hyprctl activeworkspace -j | jq -r .windows) -le 1 ]; then hyprctl dispatch killactive; hyprctl dispatch workspace previous; else hyprctl dispatch killactive; fi"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock --grace 1"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock --grace 3"))
 hl.bind(mainMod .. " + N",
     hl.dsp.exec_cmd(
         "sh -c 'out=$(hyprctl dispatch swapwindow r 2>&1); echo \"$out\" | grep -qx \"ok\" || hyprctl dispatch swapwindow l'"))
@@ -147,7 +146,7 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }))
 end
 
-hl.bind(mainMod .. " + R", hl.dps.submap("resize"))
+hl.bind(mainMod .. " + R", hl.dsp.submap("resize"))
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Resize submap
@@ -162,5 +161,5 @@ hl.define_submap("resize", function()
 
     -- Use `reset` to go back to the global submap
     hl.bind("escape", hl.dsp.submap("reset"))
-    hl.bind("catchall", hl.dsp.submap("reset"))
+    hl.bind("R", hl.dsp.submap("reset"))
 end)

@@ -202,7 +202,9 @@ pacstrap -K /mnt \
     zsh-syntax-highlighting \
     git \
     networkmanager \
-    pkgfile
+    pkgfile \
+    nano \
+    iwctl
 
 # Setting hostname.
 echo "$hostname" > /mnt/etc/hostname
@@ -308,7 +310,7 @@ fi
 chmod 440 /mnt/etc/sudoers.d/wheel
 
 # creating users
-cat > /mnt/etc/skel/.zshrc <<'EOF'
+cat > /mnt/etc/skel/.zshrc <<EOF
 export ZSH=/usr/share/oh-my-zsh
 
 ZSH_THEME="af-magic"
@@ -320,12 +322,12 @@ plugins=(
     sudo
 )
 
-source "$ZSH/oh-my-zsh.sh"
+source "\$ZSH/oh-my-zsh.sh"
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 function sudo2()
 {
-    runuser $sudo_user -c "sudo $*"
+    su $sudo_user -c "sudo $*"
 }
 EOF
 
@@ -360,11 +362,18 @@ read -r username _ <<< "${USERS[0]}"
 chmod 701 "/mnt/home/$username"
 
 mkdir -p "/mnt/home/$username/arch-config"
+
+# failed last time on a live install, for unknown reasons
 cp -a "$SCRIPT_DIR/../." "/mnt/home/$username/arch-config/"
 
 arch-chroot /mnt chown -R "$username:$username" "/home/$username/arch-config"
 
 find /mnt/home/$username/arch-config -mindepth 2 -maxdepth 2 -type f -name '*.sh' -exec chmod +x {} +
+
+# this might be simpler
+# chmod +x /mnt/home/$username/arch-config/config/*sh
+# chmod +x /mnt/home/$username/arch-config/programs/*sh
+# chmod +x /mnt/home/$username/arch-config/scripts/*sh
 
 # arch-chroot /mnt /home/$username/arch-config/scripts/full.sh
 

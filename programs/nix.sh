@@ -45,6 +45,9 @@ if ! systemctl is-enabled --quiet nix-daemon.service; then
     systemctl enable --now nix-daemon.service
 fi
 
+# did fail for some reason on a live install, for missing permissions, even through the script is run with sudo
+mkdir -p /nix/store
+
 # Install the programs into the user's Nix profile
 info_print "Installing programs"
 

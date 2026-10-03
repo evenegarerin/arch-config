@@ -7,7 +7,7 @@ cat > /etc/greetd/config.toml <<'EOF'
 vt = 1
 
 [default_session]
-command = "start-hyprland"
+command = "start-hyprland && read -n 1 -p Continue?; done"
 user = "castle"
 EOF
 
